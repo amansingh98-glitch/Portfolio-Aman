@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Premium Portfolio | Creative Developer",
-  description: "A high-performance, visually stunning portfolio built with Next.js",
+  title: "Aman Singh | Java Developer Portfolio",
+  description: "A professional portfolio of Aman Singh, featuring full-stack development and Java expertise.",
 };
 
 export default function RootLayout({
