@@ -135,13 +135,13 @@ export default function Projects() {
       ],
       link: "https://minigram-frontend.vercel.app",
       images: [
-        "/images/projects/minigram/1.png",
-        "/images/projects/minigram/2.png",
-        "/images/projects/minigram/3.png",
-        "/images/projects/minigram/4.png",
-        "/images/projects/minigram/5.png",
-        "/images/projects/minigram/6.png",
-        "/images/projects/minigram/7.png"
+        "/1.png",
+        "/2.png",
+        "/3.png",
+        "/4.png",
+        "/5.png",
+        "/6.png",
+        "/7.png"
       ]
     }
   ];
@@ -171,7 +171,11 @@ export default function Projects() {
               cursor: "pointer",
               position: "relative",
               overflow: "hidden"
-            }} onClick={() => project.link && window.open(project.link, "_blank")}
+            }} onClick={(e) => {
+              if (project.link) {
+                window.open(project.link, "_blank", "noopener,noreferrer");
+              }
+            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-10px)";
               e.currentTarget.style.background = "linear-gradient(145deg, var(--background), var(--accent))";
