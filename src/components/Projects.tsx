@@ -1,5 +1,124 @@
-"use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+function ProjectCarousel({ images }: { images: string[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  const next = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div style={{
+      position: "relative",
+      width: "100%",
+      height: "250px",
+      overflow: "hidden",
+      borderRadius: "12px",
+      boxShadow: "var(--inner-shadow)",
+      background: "var(--background)"
+    }}>
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={index}
+          src={images[index]}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectCover: "cover" as any
+          }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = `https://via.placeholder.com/600x400?text=Project+Screenshot+${index + 1}`;
+          }}
+        />
+      </AnimatePresence>
+
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "between",
+        padding: "0 10px",
+        pointerEvents: "none"
+      }}>
+        <button onClick={prev} style={{
+          pointerEvents: "auto",
+          padding: "8px",
+          background: "rgba(255,255,255,0.2)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "50%",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+          <ChevronLeft size={20} />
+        </button>
+        <div style={{ flex: 1 }} />
+        <button onClick={next} style={{
+          pointerEvents: "auto",
+          padding: "8px",
+          background: "rgba(255,255,255,0.2)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "50%",
+          color: "white",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+          <ChevronRight size={20} />
+        </button>
+      </div>
+
+      <div style={{
+        position: "absolute",
+        bottom: "15px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: "6px"
+      }}>
+        {images.map((_, i) => (
+          <div
+            key={i}
+            style={{
+              height: "6px",
+              width: i === index ? "16px" : "6px",
+              borderRadius: "10px",
+              background: i === index ? "var(--accent)" : "rgba(255,255,255,0.5)",
+              transition: "all 0.3s ease"
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Projects() {
   const projects = [
@@ -13,6 +132,16 @@ export default function Projects() {
         "Secure OTP Auth using SendGrid",
         "Cloudinary integration for 4K media",
         "Neon DB (PostgreSQL) for cloud storage"
+      ],
+      link: "https://minigram-frontend.vercel.app",
+      images: [
+        "/images/projects/minigram/1.png",
+        "/images/projects/minigram/2.png",
+        "/images/projects/minigram/3.png",
+        "/images/projects/minigram/4.png",
+        "/images/projects/minigram/5.png",
+        "/images/projects/minigram/6.png",
+        "/images/projects/minigram/7.png"
       ]
     }
   ];
@@ -42,7 +171,8 @@ export default function Projects() {
               cursor: "pointer",
               position: "relative",
               overflow: "hidden"
-            }} onMouseEnter={(e) => {
+            }} onClick={() => project.link && window.open(project.link, "_blank")}
+            onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-10px)";
               e.currentTarget.style.background = "linear-gradient(145deg, var(--background), var(--accent))";
               e.currentTarget.querySelectorAll("h3, p, span").forEach(el => (el as HTMLElement).style.color = "white");
@@ -52,19 +182,23 @@ export default function Projects() {
                e.currentTarget.querySelectorAll("h3").forEach(el => (el as HTMLElement).style.color = "var(--text-primary)");
                e.currentTarget.querySelectorAll("p, span").forEach(el => (el as HTMLElement).style.color = "var(--text-secondary)");
             }}>
-              <div style={{
-                width: "100%",
-                height: "250px",
-                boxShadow: "var(--inner-shadow)",
-                borderRadius: "10px",
-                marginBottom: "2rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "3rem"
-              }}>
-                {project.title === "MiniGram" ? "📸" : "🌌"}
-              </div>
+              {project.images ? (
+                <ProjectCarousel images={project.images} />
+              ) : (
+                <div style={{
+                  width: "100%",
+                  height: "250px",
+                  boxShadow: "var(--inner-shadow)",
+                  borderRadius: "10px",
+                  marginBottom: "2rem",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "3rem"
+                }}>
+                  {project.title === "MiniGram" ? "📸" : "🌌"}
+                </div>
+              )}
               <p className="pink-accent" style={{ fontSize: "0.85rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "0.5rem" }}>
                 {project.category}
               </p>
