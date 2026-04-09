@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -45,7 +46,7 @@ function ProjectCarousel({ images }: { images: string[] }) {
             inset: 0,
             width: "100%",
             height: "100%",
-            objectCover: "cover" as any
+            objectFit: "cover" as any
           }}
           onError={(e) => {
             (e.target as HTMLImageElement).src = `https://via.placeholder.com/600x400?text=Project+Screenshot+${index + 1}`;
